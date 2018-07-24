@@ -1,13 +1,22 @@
-document.addEventListener("click", (e) => {
-    if (e.target.id === "button") {
-        var regex = document.getElementById("regex").value;
+document.getElementById("regex")
+    .addEventListener("keydown", key => {
+        if (key.which === 13) {
+            cleanup_tabs();
+        }
+    });
+
+function cleanup_tabs() {
+    var regex = document.getElementById("regex").value;
+    
+    if (regex !== "") {
         var regex = new RegExp(regex);
+        document.getElementById("regex").value = "";
         
-        browser.tabs.query({}).then((tabs) => {
+        browser.tabs.query({}).then(tabs => {
             var ids = tabs
                 .filter(tab => regex.test(tab.url))
                 .map(tab => tab.id);
             browser.tabs.remove(ids);
         });
     }
-});
+}
